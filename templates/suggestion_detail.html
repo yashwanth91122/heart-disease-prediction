@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ suggestion.title }} | Heart Disease Prediction</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #132942;
+      --muted: #597190;
+      --line: #d8e7f8;
+      --primary: #1172f4;
+      --primary-dark: #0d58bd;
+      --good: #0b8b65;
+      --warn: #d48720;
+      --bad: #b53434;
+      --shadow: 0 22px 38px rgba(18, 44, 78, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(17, 114, 244, 0.18), rgba(255, 169, 104, 0.16)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      padding: 24px 14px;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.46rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: #3d5c86;
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2c89ff);
+      box-shadow: 0 10px 16px rgba(17, 114, 244, 0.24);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1769d8);
+    }
+
+    .btn.light {
+      color: #1f426f;
+      background: #eaf2ff;
+    }
+
+    .btn.light:hover {
+      background: #dce9fb;
+    }
+
+    .inline-form {
+      margin: 0;
+    }
+
+    .hero {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #e8eef9;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: 14px;
+      align-items: center;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      border: 1px solid #d4e1f3;
+      background: #eef4ff;
+      color: #214b86;
+      width: fit-content;
+      margin-bottom: 8px;
+    }
+
+    .chip.low {
+      background: #e8f9f2;
+      border-color: #c1e8d8;
+      color: var(--good);
+    }
+
+    .chip.moderate {
+      background: #fff3e1;
+      border-color: #f2dbb0;
+      color: #8a5919;
+    }
+
+    .chip.high {
+      background: #ffe8e8;
+      border-color: #f5c6c6;
+      color: #982e2e;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.12rem;
+      color: #294a74;
+    }
+
+    .hero p {
+      margin: 8px 0 0;
+      color: #4f6788;
+      line-height: 1.5;
+      font-size: 0.9rem;
+      max-width: 56ch;
+    }
+
+    .hero img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #d9e7f8;
+      background: #f8fbff;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel {
+      border-radius: 18px;
+      border: 1px solid #dde9f9;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 0.98rem;
+      color: #2b4d79;
+    }
+
+    .panel ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #395479;
+      line-height: 1.45;
+      font-size: 0.88rem;
+    }
+
+    .panel li {
+      margin-bottom: 6px;
+    }
+
+    .footnote {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid #f2ddb7;
+      background: #fff9ef;
+      color: #5f5a52;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero img {
+        max-width: 240px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .title h1 {
+        font-size: 1.28rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="toolbar">
+      <div class="title">
+        <h1>{{ suggestion.title }}</h1>
+        <p class="subtitle">Action checklist and warning cues for the selected risk level.</p>
+      </div>
+      <div class="actions">
+        <a class="btn light" href="/suggestions">All Suggestions</a>
+        <a class="btn light" href="/">New Prediction</a>
+        <form class="inline-form" method="post" action="/logout">
+          <button class="btn light" type="submit">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="chip {{ risk_level }}">{{ risk_level|title }} Risk</span>
+        <h2>{{ suggestion.tagline }}</h2>
+        <p>These recommendations are educational and intended to support medical follow-up decisions with a qualified clinician.</p>
+      </div>
+      <img src="/static/images/clinical-heart-hero.svg" alt="Heart suggestion detail illustration" />
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h3>Priority Actions</h3>
+        <ul>
+          {% for item in suggestion.priority_actions %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h3>Diet Guidance</h3>
+        <ul>
+          {% for item in suggestion.diet_guidance %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h3>Monitoring Plan</h3>
+        <ul>
+          {% for item in suggestion.monitoring_plan %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h3>Emergency Red Flags</h3>
+        <ul>
+          {% for item in suggestion.red_flags %}
+          <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+    </section>
+
+    <p class="footnote">Call emergency services immediately if severe chest pain, collapse, or sudden breathlessness occurs. Do not delay urgent care.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction Result Paper</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #142b45;
+      --muted: #5c718f;
+      --line: #d9e7f7;
+      --paper: #ffffff;
+      --primary: #1172f4;
+      --primary-dark: #0c58bd;
+      --good: #0b8b65;
+      --warn: #d48720;
+      --bad: #b23333;
+      --shadow: 0 24px 40px rgba(17, 41, 74, 0.16);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(140deg, rgba(17, 114, 244, 0.18), rgba(255, 169, 104, 0.16)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      padding: 24px 14px;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .toolbar h1 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2a88ff);
+      box-shadow: 0 10px 16px rgba(17, 114, 244, 0.24);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1768d9);
+    }
+
+    .btn.light {
+      color: #1f426f;
+      background: #eaf2ff;
+    }
+
+    .btn.light:hover {
+      background: #dce9fb;
+    }
+
+    .inline-form {
+      margin: 0;
+    }
+
+    .report {
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #e7eef9;
+      box-shadow: var(--shadow);
+    }
+
+    .report-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.65), transparent 34%),
+        linear-gradient(180deg, #ffffff, #f6faff);
+    }
+
+    .status {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.34rem;
+    }
+
+    .status.positive {
+      color: var(--bad);
+    }
+
+    .status.negative {
+      color: var(--good);
+    }
+
+    .meta {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .risk-chip {
+      margin-top: 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid #d5e1f2;
+      background: #edf4ff;
+      color: #1f4b86;
+    }
+
+    .risk-chip.high {
+      background: #ffe7e7;
+      border-color: #f4c5c5;
+      color: #972d2d;
+    }
+
+    .risk-chip.moderate {
+      background: #fff4e2;
+      border-color: #f2dbb1;
+      color: #8a5919;
+    }
+
+    .risk-chip.low {
+      background: #e8f9f2;
+      border-color: #c1e8d8;
+      color: #0f6f52;
+    }
+
+    .head-art {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #d9e7f8;
+      background: #f8fbff;
+    }
+
+    .report-body {
+      padding: 18px 22px 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: #fcfeff;
+      padding: 13px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1rem;
+      color: #2b4d79;
+    }
+
+    .card p {
+      margin: 0 0 7px;
+      color: #355173;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #3a5679;
+      line-height: 1.45;
+      font-size: 0.9rem;
+    }
+
+    .card li {
+      margin-bottom: 6px;
+    }
+
+    .compare-card {
+      border: 1px solid #cfe1f6;
+      background: linear-gradient(180deg, #f8fcff, #f3f8ff);
+    }
+
+    .compare-grid {
+      margin-top: 8px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .compare-box {
+      border-radius: 12px;
+      border: 1px solid #d8e5f6;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .compare-box h3 {
+      margin: 0 0 6px;
+      color: #3a5378;
+      font-size: 0.84rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .compare-box p {
+      margin: 0 0 4px;
+      font-size: 0.85rem;
+    }
+
+    .trend-row {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .trend-pill {
+      border-radius: 999px;
+      border: 1px solid #cfdcef;
+      background: #edf4ff;
+      color: #234b86;
+      font-size: 0.77rem;
+      font-weight: 800;
+      padding: 5px 10px;
+    }
+
+    .trend-pill.up {
+      background: #ffecec;
+      border-color: #f5c3c3;
+      color: #9a2d2d;
+    }
+
+    .trend-pill.down {
+      background: #e9faf4;
+      border-color: #bfe7d5;
+      color: #0f6f52;
+    }
+
+    .trend-pill.same {
+      background: #eef2fa;
+      border-color: #d4deee;
+      color: #3d4f6b;
+    }
+
+    .alert-card {
+      background: #fff5f5;
+      border-color: #efc9c9;
+    }
+
+    .table-wrap {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e9eff8;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.87rem;
+    }
+
+    th {
+      background: #f3f8ff;
+      color: #3d567d;
+      font-size: 0.81rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .footnote {
+      margin: 0;
+      border-top: 1px solid var(--line);
+      background: #fbfdff;
+      color: #5f718c;
+      font-size: 0.8rem;
+      padding: 10px 12px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 860px) {
+      .report-head {
+        grid-template-columns: 1fr;
+      }
+
+      .head-art {
+        max-width: 260px;
+      }
+
+      .card-grid,
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .report-head,
+      .report-body {
+        padding: 14px;
+      }
+
+      th,
+      td {
+        padding: 8px 9px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .toolbar {
+        display: none;
+      }
+
+      .report {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .report-head {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="toolbar">
+      <h1>Heart Disease Result Paper</h1>
+      <div class="actions">
+        <a class="btn light" href="/">New Prediction</a>
+        <a class="btn light" href="/suggestions">Suggestion Center</a>
+        {% if risk_band in ['Low', 'Moderate', 'High'] %}
+        <a class="btn light" href="/suggestions/{{ risk_band|lower }}">Risk Suggestions</a>
+        {% endif %}
+        <a class="btn light" href="/history">View History</a>
+        <button class="btn primary" type="button" onclick="window.print()">Print / Save PDF</button>
+        <form class="inline-form" method="post" action="/logout">
+          <button class="btn light" type="submit">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <article class="report">
+      <header class="report-head">
+        <div>
+          <p class="status {% if result == 'Heart Disease Detected' %}positive{% else %}negative{% endif %}">{{ result }}</p>
+          <p class="meta">Generated on: {{ generated_at }}</p>
+          {% if probability is not none %}
+          <p class="meta">Estimated probability: <strong>{{ '%.2f'|format(probability * 100) }}%</strong></p>
+          {% endif %}
+          <span class="risk-chip {{ risk_band|lower }}">Risk Level: {{ risk_band }}</span>
+        </div>
+        <img class="head-art" src="/static/images/clinical-heart-hero.svg" alt="Heart report illustration" />
+      </header>
+
+      <div class="report-body">
+        <section class="card compare-card">
+          <h2>Comparison With Last Prediction</h2>
+          {% if comparison and comparison.has_previous %}
+          <div class="compare-grid">
+            <div class="compare-box">
+              <h3>Last Prediction</h3>
+              <p><strong>Result:</strong> {{ comparison.previous_result }}</p>
+              <p><strong>Risk:</strong> {{ comparison.previous_risk_band }}</p>
+              <p><strong>Probability:</strong> {{ comparison.previous_probability_label }}</p>
+              <p><strong>Time:</strong> {{ comparison.previous_generated_at }}</p>
+            </div>
+
+            <div class="compare-box">
+              <h3>Current Prediction</h3>
+              <p><strong>Result:</strong> {{ comparison.current_result }}</p>
+              <p><strong>Risk:</strong> {{ comparison.current_risk_band }}</p>
+              <p><strong>Probability:</strong> {{ comparison.current_probability_label }}</p>
+              <p><strong>Time:</strong> {{ generated_at }}</p>
+            </div>
+          </div>
+
+          <div class="trend-row">
+            <span class="trend-pill {{ comparison.direction }}">Probability Trend: {{ comparison.trend }}</span>
+            <span class="trend-pill {{ comparison.direction }}">Change: {{ comparison.delta_label }}</span>
+          </div>
+          {% else %}
+          <p>No last prediction found yet. Submit one more report to compare last and this.</p>
+          {% endif %}
+        </section>
+
+        <div class="card-grid">
+          <section class="card">
+            <h2>Doctor Consultation Guidance</h2>
+            <p><strong>Whom to meet:</strong> {{ care_plan.doctor_to_meet }}</p>
+            <p><strong>Where to meet:</strong> {{ care_plan.where_to_meet }}</p>
+            <p><strong>When to meet:</strong> {{ care_plan.when_to_meet }}</p>
+          </section>
+
+          <section class="card">
+            <h2>What To Take To Doctor</h2>
+            <ul>
+              {% for item in care_plan.what_to_carry %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </section>
+        </div>
+
+        <div class="card-grid">
+          <section class="card">
+            <h2>Actions To Take Now</h2>
+            <ul>
+              {% for step in care_plan.next_steps %}
+              <li>{{ step }}</li>
+              {% endfor %}
+            </ul>
+          </section>
+
+          <section class="card">
+            <h2>Tests To Discuss With Doctor</h2>
+            <ul>
+              {% for test in care_plan.tests_to_discuss %}
+              <li>{{ test }}</li>
+              {% endfor %}
+            </ul>
+          </section>
+        </div>
+
+        <section class="card alert-card">
+          <h2>Emergency Warning Signs</h2>
+          <ul>
+            {% for sign in care_plan.emergency_signs %}
+            <li>{{ sign }}</li>
+            {% endfor %}
+          </ul>
+          <p><strong>Medication advice:</strong> {{ care_plan.medication_note }}</p>
+        </section>
+
+        <section class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Input Feature</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in feature_rows %}
+              <tr>
+                <td>{{ row.label }}</td>
+                <td>{{ row.value }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <p class="footnote">This prediction is an ML screening output and not a final diagnosis. Please follow clinical advice from a qualified doctor.</p>
+        </section>
+      </div>
+    </article>
+  </div>
+</body>
+</html>

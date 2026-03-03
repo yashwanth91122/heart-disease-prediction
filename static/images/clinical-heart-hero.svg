@@ -1,0 +1,53 @@
+<svg width="960" height="760" viewBox="0 0 960 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="42" x2="866" y2="706" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4FBFF"/>
+      <stop offset="1" stop-color="#FFF6ED"/>
+    </linearGradient>
+    <linearGradient id="line" x1="126" y1="356" x2="836" y2="356" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3D9DFF"/>
+      <stop offset="0.5" stop-color="#4A6FFF"/>
+      <stop offset="1" stop-color="#34BA9E"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="351" y1="214" x2="597" y2="542" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4B87FF"/>
+      <stop offset="1" stop-color="#2CBFA0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(482 386) rotate(90) scale(234)">
+      <stop stop-color="#6698FF" stop-opacity="0.36"/>
+      <stop offset="1" stop-color="#6698FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <rect x="26" y="26" width="908" height="708" rx="42" fill="url(#bg)"/>
+  <rect x="26" y="26" width="908" height="708" rx="42" stroke="#D8E7FA" stroke-width="2"/>
+
+  <circle cx="182" cy="158" r="72" fill="#D8ECFF"/>
+  <circle cx="792" cy="610" r="102" fill="#FFE5CF"/>
+  <circle cx="770" cy="138" r="38" fill="#DCF8EF"/>
+
+  <ellipse cx="482" cy="386" rx="242" ry="212" fill="url(#glow)"/>
+
+  <g opacity="0.22" filter="url(#soft)">
+    <path d="M126 356H262L308 300L364 418L420 312L478 356H836" stroke="url(#line)" stroke-width="20" stroke-linejoin="round"/>
+  </g>
+  <path d="M126 356H262L308 300L364 418L420 312L478 356H836" stroke="url(#line)" stroke-width="7" stroke-linejoin="round"/>
+
+  <path d="M350 330C350 273.4 394.5 227 450 227C484.2 227 514.8 243.2 533.8 269C552.8 243.2 583.5 227 617.6 227C673.1 227 717.6 273.4 717.6 330C717.6 428 583.8 504.3 533.8 531C483.9 504.3 350 428 350 330Z" fill="#EAF2FF"/>
+  <path d="M384 336C384 292.8 418 257.3 460.3 257.3C486.3 257.3 509.6 269.7 523.9 289C538.3 269.7 561.6 257.3 587.6 257.3C629.9 257.3 663.9 292.8 663.9 336C663.9 410.3 562.4 468.4 523.9 488.5C485.4 468.4 384 410.3 384 336Z" fill="url(#heart)"/>
+
+  <g opacity="0.56">
+    <circle cx="226" cy="514" r="54" stroke="#7AB1FF" stroke-width="3"/>
+    <path d="M198 514H218L226 496L238 532L248 504L258 514H278" stroke="#4C89FF" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <g opacity="0.56">
+    <rect x="690" y="458" width="122" height="94" rx="16" fill="#EEF6FF" stroke="#C8DCF5" stroke-width="2"/>
+    <rect x="706" y="474" width="90" height="10" rx="5" fill="#C8DBF8"/>
+    <rect x="706" y="494" width="58" height="10" rx="5" fill="#D6E7FC"/>
+    <rect x="706" y="514" width="78" height="10" rx="5" fill="#D6E7FC"/>
+  </g>
+</svg>

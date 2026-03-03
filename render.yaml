@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: heart-disease-prediction
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120 wsgi:app
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: APP_USERNAME
+        value: admin
+      - key: APP_PASSWORD
+        value: admin123
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: PREDICTION_HISTORY_LIMIT
+        value: "8"

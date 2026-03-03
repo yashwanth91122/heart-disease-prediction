@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction History | Heart Disease Prediction</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #132942;
+      --muted: #597190;
+      --line: #d8e7f8;
+      --primary: #1172f4;
+      --primary-dark: #0d58bd;
+      --good: #0b8b65;
+      --warn: #d48720;
+      --bad: #b53434;
+      --shadow: 0 24px 40px rgba(17, 42, 76, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(17, 114, 244, 0.18), rgba(255, 169, 104, 0.16)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      padding: 24px 14px;
+    }
+
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.48rem;
+      letter-spacing: -0.02em;
+    }
+
+    .meta {
+      margin: 6px 0 0;
+      color: #3b5a84;
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2c89ff);
+      box-shadow: 0 10px 16px rgba(17, 114, 244, 0.24);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1769d8);
+    }
+
+    .btn.light {
+      color: #1f426f;
+      background: #eaf2ff;
+    }
+
+    .btn.light:hover {
+      background: #dbe8fb;
+    }
+
+    .inline-form {
+      margin: 0;
+    }
+
+    .panel {
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #e8eef9;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: linear-gradient(180deg, #ffffff, #f6faff);
+    }
+
+    .head-copy {
+      max-width: 54ch;
+      color: #4e6787;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .head-art {
+      width: 180px;
+      border-radius: 14px;
+      border: 1px solid #d9e7f8;
+      background: #f8fbff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 940px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #e8eff8;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.86rem;
+    }
+
+    th {
+      background: #f3f8ff;
+      color: #3a557b;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .status {
+      font-weight: 800;
+    }
+
+    .status.positive {
+      color: var(--bad);
+    }
+
+    .status.negative {
+      color: var(--good);
+    }
+
+    .chip {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid #d4e1f3;
+      background: #eef4ff;
+      color: #214b86;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 5px 9px;
+    }
+
+    .chip.low {
+      background: #e8f9f2;
+      border-color: #c1e8d8;
+      color: #0f6f52;
+    }
+
+    .chip.moderate {
+      background: #fff3e1;
+      border-color: #f2dbb0;
+      color: #8a5919;
+    }
+
+    .chip.high {
+      background: #ffe8e8;
+      border-color: #f5c6c6;
+      color: #982e2e;
+    }
+
+    .feature-list {
+      margin: 0;
+      padding-left: 17px;
+      color: #405a80;
+      line-height: 1.35;
+      max-width: 360px;
+    }
+
+    .feature-list li {
+      margin-bottom: 4px;
+    }
+
+    .empty {
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footnote {
+      margin: 0;
+      border-top: 1px solid var(--line);
+      background: #fbfdff;
+      color: #61738e;
+      font-size: 0.8rem;
+      padding: 10px 12px;
+    }
+
+    @media (max-width: 840px) {
+      .head-art {
+        width: 140px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .title h1 {
+        font-size: 1.28rem;
+      }
+
+      .panel-head {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="toolbar">
+      <div class="title">
+        <h1>Prediction History</h1>
+        <p class="meta">Recent entries: {{ total_entries }} (latest first)</p>
+      </div>
+      <div class="actions">
+        <a class="btn light" href="/">New Prediction</a>
+        <a class="btn light" href="/suggestions">Suggestion Center</a>
+        <a class="btn primary" href="/history/export">Export CSV</a>
+        <form class="inline-form" method="post" action="/logout">
+          <button class="btn light" type="submit">Logout</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <p class="head-copy">Review your most recent prediction runs, compare outcomes over time, and export the current session history for external analysis.</p>
+        <img class="head-art" src="/static/images/clinical-heart-hero.svg" alt="Heart analytics illustration" />
+      </div>
+
+      {% if history_entries %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Generated At</th>
+              <th>Result</th>
+              <th>Risk</th>
+              <th>Probability</th>
+              <th>Submitted Features</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in history_entries %}
+            <tr>
+              <td>{{ item.generated_at }}</td>
+              <td>
+                <span class="status {% if item.result == 'Heart Disease Detected' %}positive{% else %}negative{% endif %}">{{ item.result }}</span>
+              </td>
+              <td>
+                <span class="chip {{ item.risk_band|lower }}">{{ item.risk_band }}</span>
+              </td>
+              <td>
+                {% if item.probability is not none %}
+                {{ '%.2f'|format(item.probability * 100) }}%
+                {% else %}
+                N/A
+                {% endif %}
+              </td>
+              <td>
+                <ul class="feature-list">
+                  {% for key, value in item.features.items() %}
+                  <li><strong>{{ key }}</strong>: {{ value }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">History is kept in your current browser session and limited to the latest {{ history_limit }} entries.</p>
+      {% else %}
+      <div class="empty">No predictions yet. Submit a prediction from the main form to populate history.</div>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>

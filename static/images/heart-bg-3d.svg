@@ -1,0 +1,66 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="166" y1="94" x2="1750" y2="1022" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ECF8FF"/>
+      <stop offset="0.48" stop-color="#F6FCFF"/>
+      <stop offset="1" stop-color="#FFF5E9"/>
+    </linearGradient>
+    <radialGradient id="lightA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(314 212) rotate(24) scale(640 392)">
+      <stop stop-color="#70B6FF" stop-opacity="0.36"/>
+      <stop offset="1" stop-color="#70B6FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lightB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1582 784) rotate(-30) scale(694 372)">
+      <stop stop-color="#FFBD8A" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#FFBD8A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lightC" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1216 152) rotate(13) scale(382 220)">
+      <stop stop-color="#6CD8C2" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#6CD8C2" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="microGrid" width="56" height="56" patternUnits="userSpaceOnUse">
+      <path d="M56 0H0V56" stroke="#84ABD6" stroke-opacity="0.18" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="wave" x1="110" y1="336" x2="1810" y2="336" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B9CFF"/>
+      <stop offset="0.54" stop-color="#4169FF"/>
+      <stop offset="1" stop-color="#2FB79B"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#4E8DFF"/>
+      <stop offset="1" stop-color="#45C2AE"/>
+    </linearGradient>
+    <filter id="blur24" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="blurGlow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#microGrid)"/>
+
+  <ellipse cx="314" cy="212" rx="620" ry="370" fill="url(#lightA)"/>
+  <ellipse cx="1582" cy="784" rx="650" ry="350" fill="url(#lightB)"/>
+  <ellipse cx="1216" cy="152" rx="340" ry="190" fill="url(#lightC)"/>
+
+  <g opacity="0.26" filter="url(#blur24)">
+    <path d="M110 336H272L336 264L412 420L484 278L564 336H1810" stroke="url(#wave)" stroke-width="22" stroke-linejoin="round"/>
+  </g>
+  <path d="M110 336H272L336 264L412 420L484 278L564 336H1810" stroke="url(#wave)" stroke-width="8" stroke-linejoin="round"/>
+
+  <g opacity="0.34">
+    <circle cx="1518" cy="252" r="118" stroke="url(#ring)" stroke-width="3"/>
+    <circle cx="1518" cy="252" r="78" stroke="#6BC3F9" stroke-width="2" stroke-dasharray="6 8"/>
+    <circle cx="1518" cy="252" r="34" fill="#E5F6FF" stroke="#66AFFF" stroke-width="2"/>
+  </g>
+
+  <g>
+    <path d="M744 674C744 615.6 790.5 568 847.6 568C882.2 568 913.3 584.6 932.4 610.6C951.5 584.6 982.6 568 1017.2 568C1074.4 568 1120.8 615.6 1120.8 674C1120.8 773.8 985.8 853.8 932.4 882C879.1 853.8 744 773.8 744 674Z" fill="#8EBBFF" fill-opacity="0.24"/>
+    <path d="M778 678C778 633.7 813.2 597.6 856.6 597.6C882.9 597.6 906.5 610.2 920.9 629.8C935.3 610.2 958.9 597.6 985.2 597.6C1028.5 597.6 1063.8 633.7 1063.8 678C1063.8 753.9 961.7 815.6 920.9 837C880.1 815.6 778 753.9 778 678Z" fill="url(#ring)" fill-opacity="0.64"/>
+  </g>
+
+  <g opacity="0.22" filter="url(#blurGlow)">
+    <circle cx="932" cy="716" r="154" fill="#4C7CFF"/>
+  </g>
+</svg>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heart Disease Prediction</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #132942;
+      --muted: #58708f;
+      --line: #d9e7f7;
+      --card: #ffffff;
+      --panel: rgba(255, 255, 255, 0.86);
+      --primary: #1172f4;
+      --primary-dark: #0d58bd;
+      --good: #0b8b65;
+      --warn: #cd8322;
+      --danger: #b53434;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow: 0 24px 42px rgba(17, 43, 77, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(128deg, rgba(17, 114, 244, 0.2), rgba(255, 173, 112, 0.18)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      padding: 22px 14px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .ambient {
+      position: fixed;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .ambient.one {
+      width: 180px;
+      height: 180px;
+      left: -36px;
+      top: 22%;
+      background: radial-gradient(circle at 28% 28%, #cae4ff, #5ca6ff 72%);
+    }
+
+    .ambient.two {
+      width: 210px;
+      height: 210px;
+      right: -70px;
+      top: 64%;
+      background: radial-gradient(circle at 28% 28%, #ffddc2, #ff9f6f 72%);
+      animation-delay: -2.4s;
+    }
+
+    .ambient.three {
+      width: 130px;
+      height: 130px;
+      right: 16%;
+      top: 8%;
+      background: radial-gradient(circle at 30% 30%, #d4fff2, #66cfad 72%);
+      animation-delay: -1.1s;
+    }
+
+    .page {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      animation: rise 0.45s ease-out;
+    }
+
+    .topbar {
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 12px 24px rgba(19, 46, 84, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .user-badge {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #2c507f;
+      border: 1px solid #cfe2f8;
+      background: #edf5ff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 700;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      color: #1f3e69;
+      background: #eaf2ff;
+    }
+
+    .small-btn:hover {
+      background: #dce9fb;
+    }
+
+    .shell {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 360px minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .info {
+      padding: 22px;
+      background:
+        radial-gradient(circle at 20% 14%, rgba(255, 255, 255, 0.65), transparent 34%),
+        linear-gradient(160deg, rgba(245, 250, 255, 0.92), rgba(255, 249, 240, 0.9));
+    }
+
+    .kicker {
+      margin: 0;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #295f9d;
+    }
+
+    .info h1 {
+      margin: 8px 0 10px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: clamp(1.55rem, 2.4vw, 2.15rem);
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+    }
+
+    .intro {
+      margin: 0;
+      color: #4f6888;
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .hero {
+      width: 100%;
+      margin-top: 16px;
+      border-radius: 18px;
+      border: 1px solid #d3e3f8;
+      background: #f8fbff;
+      box-shadow: 0 14px 24px rgba(26, 57, 98, 0.13);
+    }
+
+    .badge-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #214375;
+      border: 1px solid #d0e1f8;
+      background: #edf4ff;
+    }
+
+    .legend {
+      margin-top: 14px;
+      border-radius: var(--radius-lg);
+      border: 1px solid #dce9f8;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 12px;
+    }
+
+    .legend h2 {
+      margin: 0 0 6px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 0.95rem;
+      color: #2b4c77;
+    }
+
+    .legend ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.82rem;
+      color: #4c6585;
+      line-height: 1.45;
+    }
+
+    .note {
+      margin: 12px 0 0;
+      font-size: 0.8rem;
+      color: #5f5a52;
+      background: #fff9f0;
+      border: 1px solid #f2dfb8;
+      border-radius: 12px;
+      padding: 10px 11px;
+      line-height: 1.45;
+    }
+
+    .form-panel {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-head {
+      padding: 20px 22px 14px;
+      border-bottom: 1px solid #e8eff9;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+    }
+
+    .form-head h2 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .form-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .form-body {
+      padding: 18px 22px 22px;
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .step-pill {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid #d2e2f7;
+      background: #eff6ff;
+      color: #5d6f89;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      transition: all 0.2s ease;
+    }
+
+    .step-pill.active {
+      color: #fff;
+      border-color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #2b88ff);
+      box-shadow: 0 10px 18px rgba(17, 114, 244, 0.26);
+      transform: translateY(-1px);
+    }
+
+    .step {
+      display: none;
+      animation: enterStep 0.25s ease;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field-grid.compact {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #385172;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 10px 11px;
+      font-size: 0.93rem;
+      font-family: inherit;
+      color: var(--ink);
+      background: #fff;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: #78b0fc;
+      box-shadow: 0 0 0 4px rgba(17, 114, 244, 0.12);
+    }
+
+    .buttons {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .actions-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn.secondary {
+      color: #24446f;
+      background: #eaf2ff;
+    }
+
+    .btn.secondary:hover {
+      background: #dce9fc;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2c8cff);
+      box-shadow: 0 11px 18px rgba(17, 114, 244, 0.26);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1868d8);
+      box-shadow: 0 13px 20px rgba(13, 88, 189, 0.28);
+    }
+
+    .result-card {
+      margin-top: 20px;
+      border-radius: 18px;
+      border: 1px solid #d4e8dc;
+      background: #f3fff8;
+      padding: 14px;
+      box-shadow: 0 14px 24px rgba(24, 56, 84, 0.09);
+    }
+
+    .result-card.error {
+      border-color: #f2d0d0;
+      background: #fff5f5;
+    }
+
+    .result-card.safe {
+      border-color: #d5e7f8;
+      background: #f2f8ff;
+    }
+
+    .result-title {
+      margin: 0 0 8px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.1rem;
+      color: var(--good);
+    }
+
+    .result-card.error .result-title {
+      color: var(--danger);
+    }
+
+    .result-card.safe .result-title {
+      color: #235eaa;
+    }
+
+    .risk-wrap {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #d8e6f7;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .risk-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #3f5f88;
+    }
+
+    .meter {
+      height: 9px;
+      width: 100%;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e6eff9;
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #18a06f, #f0b54f, #dc4444);
+    }
+
+    .new-link {
+      margin-top: 12px;
+    }
+
+    .new-link a {
+      text-decoration: none;
+      color: #fff;
+      background: var(--primary);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    @media (max-width: 1020px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .info {
+        padding-bottom: 18px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .field-grid,
+      .field-grid.compact {
+        grid-template-columns: 1fr;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .actions-right {
+        width: 100%;
+      }
+
+      .actions-right .btn {
+        flex: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ambient,
+      .step,
+      .page {
+        animation: none;
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-14px) scale(1.05);
+      }
+    }
+
+    @keyframes enterStep {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient one"></div>
+  <div class="ambient two"></div>
+  <div class="ambient three"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <p class="user-badge">Signed in as {{ session.get('user', 'User') }}</p>
+      <div class="top-actions">
+        <a class="small-btn" href="/suggestions">Suggestions</a>
+        <a class="small-btn" href="/history">History</a>
+        <form method="post" action="/logout">
+          <button class="small-btn" type="submit">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="card info">
+        <p class="kicker">ML Screening Tool</p>
+        <h1>Heart Disease Prediction</h1>
+        <p class="intro">Enter patient metrics in two guided steps to estimate risk and generate a doctor-ready report.</p>
+
+        <img class="hero" src="/static/images/clinical-heart-hero.svg" alt="Heart and analytics illustration" />
+
+        <div class="badge-row">
+          <span class="badge">13 Features</span>
+          <span class="badge">Risk Probability</span>
+          <span class="badge">History Tracking</span>
+        </div>
+
+        <div class="legend">
+          <h2>Quick Value Guide</h2>
+          <ul>
+            <li>sex, fbs, exang: use 0 or 1</li>
+            <li>cp: 0 to 3, restecg: 0 to 2, slope: 0 to 2</li>
+            <li>ca: 0 to 3, thal: 0 to 2</li>
+          </ul>
+        </div>
+
+        <p class="note">Educational application only. Do not use this output as a standalone medical diagnosis.</p>
+      </aside>
+
+      <main class="card form-panel">
+        <header class="form-head">
+          <h2>Patient Input Form</h2>
+          <p>Complete both steps and submit to run prediction.</p>
+        </header>
+
+        <div class="form-body">
+          <div class="stepper">
+            <div id="indicator-0" class="step-pill active">Step 1: Basics</div>
+            <div id="indicator-1" class="step-pill">Step 2: Clinical Data</div>
+          </div>
+
+          <form id="predictionForm" method="post" action="/predict">
+            <section class="step active" id="step-0">
+              <div class="field-grid compact">
+                <div class="field">
+                  <label for="age">Age</label>
+                  <input id="age" type="number" name="age" min="1" max="120" placeholder="e.g. 55" required />
+                </div>
+
+                <div class="field">
+                  <label for="sex">Sex</label>
+                  <select id="sex" name="sex" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">Female (0)</option>
+                    <option value="1">Male (1)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="cp">Chest Pain Type</label>
+                  <select id="cp" name="cp" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <section class="step" id="step-1">
+              <div class="field-grid">
+                <div class="field">
+                  <label for="trestbps">Resting Blood Pressure</label>
+                  <input id="trestbps" type="number" name="trestbps" min="70" max="250" placeholder="e.g. 140" required />
+                </div>
+
+                <div class="field">
+                  <label for="chol">Serum Cholesterol (mg/dl)</label>
+                  <input id="chol" type="number" name="chol" min="100" max="700" placeholder="e.g. 240" required />
+                </div>
+
+                <div class="field">
+                  <label for="fbs">Fasting Blood Sugar &gt; 120</label>
+                  <select id="fbs" name="fbs" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">No (0)</option>
+                    <option value="1">Yes (1)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="restecg">Resting ECG Result</label>
+                  <select id="restecg" name="restecg" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="thalach">Max Heart Rate</label>
+                  <input id="thalach" type="number" name="thalach" min="50" max="250" placeholder="e.g. 150" required />
+                </div>
+
+                <div class="field">
+                  <label for="exang">Exercise Induced Angina</label>
+                  <select id="exang" name="exang" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">No (0)</option>
+                    <option value="1">Yes (1)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="oldpeak">Oldpeak (ST Depression)</label>
+                  <input id="oldpeak" type="number" step="0.1" name="oldpeak" min="0" max="10" placeholder="e.g. 1.5" required />
+                </div>
+
+                <div class="field">
+                  <label for="slope">Slope of Peak ST Segment</label>
+                  <select id="slope" name="slope" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="ca">Major Vessels by Fluoroscopy</label>
+                  <select id="ca" name="ca" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="thal">Thalassemia</label>
+                  <select id="thal" name="thal" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="0">Normal (0)</option>
+                    <option value="1">Fixed Defect (1)</option>
+                    <option value="2">Reversible Defect (2)</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <div class="buttons">
+              <button type="button" id="prevBtn" class="btn secondary" onclick="changeStep(-1)">Previous</button>
+              <div class="actions-right">
+                <button type="button" id="nextBtn" class="btn secondary" onclick="changeStep(1)">Next</button>
+                <button type="submit" id="submitBtn" class="btn primary" style="display:none;">Predict Risk</button>
+              </div>
+            </div>
+          </form>
+
+          {% if result %}
+          <section id="resultCard" class="result-card {% if 'Error:' in result %}error{% elif result == 'No Heart Disease' %}safe{% endif %}">
+            <h3 class="result-title">{{ result }}</h3>
+
+            {% if probability is not none %}
+            <div class="risk-wrap">
+              <div class="risk-label">
+                <span>Estimated Risk Probability</span>
+                <strong>{{ '%.2f'|format(probability * 100) }}%</strong>
+              </div>
+              <div class="meter">
+                <span style="width: {{ '%.2f'|format(probability * 100) }}%;"></span>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if recommendations %}
+            <h4>Recommended Next Actions</h4>
+            <ul>
+              {% for recommendation in recommendations %}
+              <li>{{ recommendation }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="new-link">
+              <a href="/">Start New Prediction</a>
+            </div>
+          </section>
+          {% endif %}
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll(".step");
+    const indicators = document.querySelectorAll(".step-pill");
+
+    function showStep(step) {
+      steps.forEach((element, index) => {
+        element.classList.toggle("active", index === step);
+        indicators[index].classList.toggle("active", index === step);
+      });
+
+      document.getElementById("prevBtn").style.display = step === 0 ? "none" : "inline-block";
+      document.getElementById("nextBtn").style.display = step === steps.length - 1 ? "none" : "inline-block";
+      document.getElementById("submitBtn").style.display = step === steps.length - 1 ? "inline-block" : "none";
+    }
+
+    function validateCurrentStep() {
+      const currentInputs = steps[currentStep].querySelectorAll("input, select");
+      for (const input of currentInputs) {
+        if (!input.checkValidity()) {
+          input.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function changeStep(direction) {
+      if (direction > 0 && !validateCurrentStep()) {
+        return;
+      }
+
+      currentStep += direction;
+      if (currentStep < 0) {
+        currentStep = 0;
+      }
+      if (currentStep >= steps.length) {
+        currentStep = steps.length - 1;
+      }
+      showStep(currentStep);
+    }
+
+    showStep(currentStep);
+
+    const resultCard = document.getElementById("resultCard");
+    if (resultCard) {
+      resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  </script>
+</body>
+</html>

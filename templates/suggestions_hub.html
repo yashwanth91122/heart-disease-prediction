@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suggestion Center | Heart Disease Prediction</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #132942;
+      --muted: #597190;
+      --line: #d8e7f8;
+      --primary: #1172f4;
+      --primary-dark: #0d58bd;
+      --good: #0b8b65;
+      --warn: #d48720;
+      --bad: #b53434;
+      --shadow: 0 22px 38px rgba(18, 44, 78, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(17, 114, 244, 0.18), rgba(255, 169, 104, 0.16)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      padding: 24px 14px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.46rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: #3d5c86;
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2c89ff);
+      box-shadow: 0 10px 16px rgba(17, 114, 244, 0.24);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1769d8);
+    }
+
+    .btn.light {
+      color: #1f426f;
+      background: #eaf2ff;
+    }
+
+    .btn.light:hover {
+      background: #dce9fb;
+    }
+
+    .inline-form {
+      margin: 0;
+    }
+
+    .hero {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #e8eef9;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 210px;
+      gap: 14px;
+      align-items: center;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #4f6788;
+      line-height: 1.5;
+      font-size: 0.92rem;
+      max-width: 60ch;
+    }
+
+    .hero img {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #d9e7f8;
+      background: #f8fbff;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      border-radius: 18px;
+      border: 1px solid #dee9f9;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      border: 1px solid #d4e1f3;
+      background: #eef4ff;
+      color: #214b86;
+      width: fit-content;
+    }
+
+    .chip.low {
+      background: #e8f9f2;
+      border-color: #c1e8d8;
+      color: var(--good);
+    }
+
+    .chip.moderate {
+      background: #fff3e1;
+      border-color: #f2dbb0;
+      color: #8a5919;
+    }
+
+    .chip.high {
+      background: #ffe8e8;
+      border-color: #f5c6c6;
+      color: #982e2e;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.02rem;
+      color: #294a74;
+    }
+
+    .card p {
+      margin: 0;
+      color: #4f6788;
+      line-height: 1.45;
+      font-size: 0.9rem;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #395479;
+      font-size: 0.87rem;
+      line-height: 1.4;
+    }
+
+    .card li {
+      margin-bottom: 5px;
+    }
+
+    .card .btn {
+      justify-self: start;
+      margin-top: 2px;
+    }
+
+    .highlight {
+      border-color: #9ec2f8;
+      box-shadow: 0 0 0 2px rgba(17, 114, 244, 0.16), var(--shadow);
+    }
+
+    @media (max-width: 960px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero img {
+        max-width: 240px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .title h1 {
+        font-size: 1.28rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="toolbar">
+      <div class="title">
+        <h1>Suggestion Center</h1>
+        <p class="subtitle">Action plans grouped by risk level for quick, practical follow-up.</p>
+      </div>
+      <div class="actions">
+        <a class="btn light" href="/">New Prediction</a>
+        <a class="btn light" href="/history">History</a>
+        <form class="inline-form" method="post" action="/logout">
+          <button class="btn light" type="submit">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <section class="hero">
+      <p>Use these pages as a structured guide after prediction. Select your risk level to see targeted actions, monitoring schedule, and warning signs to watch for. This is educational support and not a medical diagnosis.</p>
+      <img src="/static/images/clinical-heart-hero.svg" alt="Heart suggestion hub illustration" />
+    </section>
+
+    <section class="grid">
+      {% for level, detail in suggestions.items() %}
+      <article class="card {% if selected_risk == level %}highlight{% endif %}">
+        <span class="chip {{ level }}">{{ level|title }} Risk</span>
+        <h2>{{ detail.title }}</h2>
+        <p>{{ detail.tagline }}</p>
+        <ul>
+          {% for action in detail.priority_actions[:3] %}
+          <li>{{ action }}</li>
+          {% endfor %}
+        </ul>
+        <a class="btn primary" href="/suggestions/{{ level }}">Open {{ level|title }} Suggestions</a>
+      </article>
+      {% endfor %}
+    </section>
+  </div>
+</body>
+</html>
