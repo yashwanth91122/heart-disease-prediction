@@ -396,16 +396,13 @@
     <div class="toolbar">
       <h1>Heart Disease Result Paper</h1>
       <div class="actions">
-        <a class="btn light" href="/">New Prediction</a>
+        <a class="btn light" href="/dashboard">New Prediction</a>
         <a class="btn light" href="/suggestions">Suggestion Center</a>
         {% if risk_band in ['Low', 'Moderate', 'High'] %}
         <a class="btn light" href="/suggestions/{{ risk_band|lower }}">Risk Suggestions</a>
         {% endif %}
         <a class="btn light" href="/history">View History</a>
         <button class="btn primary" type="button" onclick="window.print()">Print / Save PDF</button>
-        <form class="inline-form" method="post" action="/logout">
-          <button class="btn light" type="submit">Logout</button>
-        </form>
       </div>
     </div>
 

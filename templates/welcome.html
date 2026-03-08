@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome | Heart Disease Prediction</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap");
+
+    :root {
+      --ink: #132942;
+      --muted: #5b7392;
+      --line: #d8e8fa;
+      --primary: #1172f4;
+      --primary-dark: #0d58bd;
+      --shadow: 0 26px 44px rgba(16, 42, 77, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(130deg, rgba(17, 114, 244, 0.2), rgba(255, 169, 104, 0.16)),
+        url("/static/images/heart-bg-3d.svg") center/cover no-repeat fixed;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      animation: floatOrb 8s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 180px;
+      height: 180px;
+      left: -34px;
+      top: 24%;
+      background: radial-gradient(circle at 30% 30%, #cae4ff, #5ca6ff 72%);
+    }
+
+    .orb.two {
+      width: 230px;
+      height: 230px;
+      right: -72px;
+      top: 62%;
+      background: radial-gradient(circle at 30% 30%, #ffd9bf, #ff9f6f 72%);
+      animation-delay: -2.6s;
+    }
+
+    .welcome-shell {
+      width: min(1040px, 100%);
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      animation: rise 0.6s ease-out;
+    }
+
+    .hero {
+      padding: 26px 24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.62), transparent 40%),
+        linear-gradient(165deg, rgba(245, 250, 255, 0.92), rgba(255, 249, 240, 0.9));
+    }
+
+    .kicker {
+      margin: 0;
+      color: #2a609d;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.73rem;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 8px;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+      line-height: 1.17;
+      letter-spacing: -0.02em;
+    }
+
+    .intro {
+      margin: 0;
+      color: #4f6788;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      max-width: 58ch;
+    }
+
+    .hero-img {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 18px;
+      border-radius: 18px;
+      border: 1px solid #d4e4f8;
+      background: #f8fbff;
+      box-shadow: 0 14px 24px rgba(21, 54, 92, 0.14);
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(140deg, var(--primary), #2b8cff);
+      box-shadow: 0 12px 20px rgba(17, 114, 244, 0.28);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(140deg, var(--primary-dark), #1768d8);
+    }
+
+    .btn.light {
+      color: #21426f;
+      background: #eaf2ff;
+    }
+
+    .btn.light:hover {
+      background: #dce9fb;
+    }
+
+    .side {
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+      align-content: center;
+    }
+
+    .pulse {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.9rem;
+      color: #fff;
+      background: radial-gradient(circle at 30% 30%, #9fd2ff, #2a79e8 72%);
+      animation: heartBeat 1s ease-in-out infinite;
+      margin: 0 auto;
+    }
+
+    .side h2 {
+      margin: 0;
+      text-align: center;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.06rem;
+      color: #2d4f79;
+    }
+
+    .side p {
+      margin: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .feature-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #405983;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .feature-list li {
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 940px) {
+      .welcome-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-img {
+        max-width: 420px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 14px 10px;
+      }
+
+      .hero,
+      .side {
+        padding: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .orb,
+      .pulse,
+      .card {
+        animation: none;
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatOrb {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-15px) scale(1.05);
+      }
+    }
+
+    @keyframes heartBeat {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(157, 211, 255, 0.28);
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 14px rgba(157, 211, 255, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <main class="welcome-shell">
+    <section class="card hero">
+      <p class="kicker">Welcome</p>
+      <h1>Heart Disease Prediction Website</h1>
+      <p class="intro">Estimate heart disease risk with structured clinical inputs, view actionable suggestion pages, and export your prediction history. Open the dashboard to begin.</p>
+
+      <img class="hero-img" src="/static/images/clinical-heart-hero.svg" alt="Heart analytics welcome illustration" />
+
+      <div class="actions">
+        <a class="btn primary" href="/dashboard">Enter Dashboard</a>
+        <a class="btn light" href="/suggestions">View Suggestions</a>
+      </div>
+    </section>
+
+    <aside class="card side">
+      <div class="pulse">❤</div>
+      <h2>Quick Start</h2>
+      <p>Fill patient features in two steps and generate a printable report.</p>
+      <ul class="feature-list">
+        <li>Model-based risk estimate</li>
+        <li>Risk-specific suggestions</li>
+        <li>Session history export</li>
+      </ul>
+    </aside>
+  </main>
+</body>
+</html>

@@ -41,9 +41,6 @@ try:
 except Exception as exc:
     model_load_error = str(exc)
 
-APP_USERNAME = os.getenv("APP_USERNAME", "admin")
-APP_PASSWORD = os.getenv("APP_PASSWORD", "admin123")
-
 # Expected fields and validation bounds (min, max)
 FEATURE_SPECS = {
     "age": (1, 120),
@@ -379,7 +376,7 @@ def login_required(view_func):
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
         if not session.get("user"):
-            return redirect(url_for("login", next=request.path))
+            session["user"] = "Guest"
         return view_func(*args, **kwargs)
 
     return wrapped_view
@@ -388,8 +385,6 @@ def login_required(view_func):
 def api_login_required(view_func):
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
-        if not session.get("user"):
-            return jsonify({"error": "Authentication required. Login first."}), 401
         return view_func(*args, **kwargs)
 
     return wrapped_view
@@ -411,34 +406,25 @@ def healthz():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    error = None
-    next_url = request.args.get("next", "/")
-
-    if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
-        next_url = request.form.get("next", "/")
-
-        if username == APP_USERNAME and password == APP_PASSWORD:
-            session["user"] = username
-            if next_url and next_url.startswith("/"):
-                return redirect(next_url)
-            return redirect(url_for("home"))
-
-        error = "Invalid username or password."
-
-    return render_template("login.html", error=error, next_url=next_url)
+    session["user"] = "Guest"
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    session["user"] = "Guest"
+    return redirect(url_for("welcome"))
 
 
 @app.route("/")
+def welcome():
+    return render_template("welcome.html")
+
+
+@app.route("/dashboard")
 @login_required
-def home():
+def dashboard():
     if not is_prediction_ready():
         return render_template(
             "index.html",

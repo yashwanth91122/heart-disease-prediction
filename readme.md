@@ -9,8 +9,8 @@ Flask-based web application that predicts heart disease risk from patient clinic
 - `Procfile`: Process definition for PaaS deployment
 - `render.yaml`: Render deployment configuration
 - `Dockerfile`: Container image definition
-- `templates/login.html`: Login page
 - `templates/index.html`: Multi-step input form
+- `templates/welcome.html`: Public welcome/landing page
 - `templates/result.html`: Separate printable result paper
 - `templates/history.html`: Session-based prediction history page
 - `templates/suggestions_hub.html`: Suggestions hub page
@@ -48,7 +48,7 @@ gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 --timeout 120 wsgi:app
 1. Push this project to GitHub.
 2. Create a new Render Web Service from the repo.
 3. Render auto-detects `render.yaml` and uses the configured build/start commands.
-4. Set credentials/env vars from dashboard if needed.
+4. Set environment variables from dashboard if needed.
 
 ### Option 2: Docker
 
@@ -57,36 +57,33 @@ docker build -t heart-disease-site .
 docker run -p 5000:5000 heart-disease-site
 ```
 
-## Login
+## Access
 
-- Default username: `admin`
-- Default password: `admin123`
+No username/password login is required. The app opens to a welcome page and then enters the dashboard.
 
-You can override credentials with environment variables:
+Environment variables:
 
-- `APP_USERNAME`
-- `APP_PASSWORD`
 - `FLASK_SECRET_KEY`
 - `SESSION_COOKIE_SECURE` (`1` in HTTPS deployments)
 - `PREDICTION_HISTORY_LIMIT` (default: `8`)
 
 ## Routes
 
-- `GET /login`: Login page
-- `POST /login`: User authentication
-- `POST /logout`: Logout
-- `GET /`: Input dashboard
+- `GET /`: Welcome page
+- `GET /dashboard`: Input dashboard
+- `GET /login`: Redirects to dashboard (legacy route)
+- `POST /logout`: Resets session and redirects to welcome page
 - `POST /predict`: Web prediction result page
 - `GET /history`: Session prediction history
 - `GET /suggestions`: Suggestion hub (low/moderate/high)
 - `GET /suggestions/<risk_level>`: Detailed suggestion page for a risk band
 - `GET /history/export`: Download history as CSV
-- `POST /api/predict`: JSON prediction API (requires authenticated session)
+- `POST /api/predict`: JSON prediction API
 - `GET /healthz`: Health status endpoint
 
 ## API Example
 
-After logging in from browser or test client, send:
+Send:
 
 ```bash
 curl -X POST http://127.0.0.1:5000/api/predict \

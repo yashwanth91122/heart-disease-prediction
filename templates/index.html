@@ -41,6 +41,62 @@
       overflow-x: hidden;
     }
 
+    .startup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.55), transparent 42%),
+        linear-gradient(135deg, rgba(14, 41, 78, 0.94), rgba(18, 82, 154, 0.9));
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .startup-overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .startup-box {
+      width: min(320px, calc(100% - 24px));
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 18px 36px rgba(6, 20, 44, 0.35);
+      text-align: center;
+      padding: 20px 16px;
+      color: #f4fbff;
+    }
+
+    .pulse-heart {
+      margin: 0 auto 10px;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 30% 30%, #9ed2ff, #2978e8 72%);
+      font-size: 1.55rem;
+      animation: pulseHeart 0.9s ease-in-out infinite;
+    }
+
+    .startup-title {
+      margin: 0;
+      font-family: "Sora", "Manrope", sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+
+    .startup-subtitle {
+      margin: 6px 0 0;
+      font-size: 0.86rem;
+      color: #dbeeff;
+      line-height: 1.45;
+    }
+
     .ambient {
       position: fixed;
       border-radius: 999px;
@@ -510,7 +566,8 @@
     @media (prefers-reduced-motion: reduce) {
       .ambient,
       .step,
-      .page {
+      .page,
+      .pulse-heart {
         animation: none;
       }
     }
@@ -545,22 +602,38 @@
         transform: translateY(0);
       }
     }
+
+    @keyframes pulseHeart {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(173, 220, 255, 0.2);
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 14px rgba(173, 220, 255, 0);
+      }
+    }
   </style>
 </head>
 <body>
+  <div id="startupOverlay" class="startup-overlay">
+    <div class="startup-box">
+      <div class="pulse-heart">❤</div>
+      <p class="startup-title">Heart Risk Estimator</p>
+      <p class="startup-subtitle">Loading your prediction dashboard...</p>
+    </div>
+  </div>
+
   <div class="ambient one"></div>
   <div class="ambient two"></div>
   <div class="ambient three"></div>
 
   <div class="page">
     <header class="topbar">
-      <p class="user-badge">Signed in as {{ session.get('user', 'User') }}</p>
+      <p class="user-badge">Heart Prediction Portal</p>
       <div class="top-actions">
         <a class="small-btn" href="/suggestions">Suggestions</a>
         <a class="small-btn" href="/history">History</a>
-        <form method="post" action="/logout">
-          <button class="small-btn" type="submit">Logout</button>
-        </form>
       </div>
     </header>
 
@@ -750,7 +823,7 @@
             {% endif %}
 
             <div class="new-link">
-              <a href="/">Start New Prediction</a>
+              <a href="/dashboard">Start New Prediction</a>
             </div>
           </section>
           {% endif %}
@@ -807,6 +880,13 @@
     if (resultCard) {
       resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    const startupOverlay = document.getElementById("startupOverlay");
+    window.addEventListener("load", () => {
+      window.setTimeout(() => {
+        startupOverlay.classList.add("hide");
+      }, 950);
+    });
   </script>
 </body>
 </html>
